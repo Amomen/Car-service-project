@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
     return (
         <nav>
-            <Navbar fixed="top" bg="primary" expand="lg">
+            <Navbar bg="primary" expand="lg">
                 <Container>
                     <Navbar.Brand as={Link} to="/">
                         <img height={30} src={logo}></img>
@@ -15,6 +15,8 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
+                            <Nav.Link href="home#services">Services</Nav.Link>
+                            <Nav.Link href="home#experts">Experts</Nav.Link>
                             <Nav.Link as={Link} to="/home">
                                 Home
                             </Nav.Link>
