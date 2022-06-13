@@ -6,11 +6,11 @@ import logo from "../../images/logo/logo.png";
 import { Link } from "react-router-dom";
 const Header = () => {
     return (
-        <div>
-            <Navbar bg="primary" expand="lg">
+        <nav>
+            <Navbar fixed="top" bg="primary" expand="lg">
                 <Container>
                     <Navbar.Brand as={Link} to="/">
-                        <img src={logo}></img>
+                        <img height={30} src={logo}></img>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
@@ -28,7 +28,7 @@ const Header = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-        </div>
+        </nav>
     );
 };
 
