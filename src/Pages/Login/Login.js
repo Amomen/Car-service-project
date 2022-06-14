@@ -1,19 +1,34 @@
 import React, { useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useLocation, useNavigate } from "react-router-dom";
+import auth from "../../firebase.init";
 const Login = () => {
-    const navigate = useNavigate();
+    const location = useLocation();
     const emailRef = useRef("");
     const passRef = useRef("");
+    const navigate = useNavigate();
+    const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const email = emailRef.current.value;
         const pass = passRef.current.value;
+        signInWithEmailAndPassword(emailRef, passRef);
     };
+
+    if (loading) {
+        return <p>Loading...</p>;
+    } else {
+        let from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
+        // navigate("/about");
+    }
     const navigateRegister = (event) => {
         navigate("/register");
     };
+
     return (
         <div className="mt-10 container mx-auto w-50">
             <h2 className="text-primary mt-4 text-center">Please Login</h2>

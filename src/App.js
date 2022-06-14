@@ -8,10 +8,12 @@ import Header from "./Shared/Header/Header";
 import Footer from "./Shared/Footer/Footer";
 // import Service from "./Pages/Home/Services/Service";
 import Services from "./Pages/Services/ServiceDetails";
-import ServiceDetails from "./Pages/Services/ServiceDetails";
-import NotFound from "./Shared/NotFound/NotFound";
+
 import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
+import Checkout from "./Pages/Checkout/Checkout";
+import RequireAuth from "./Pages/Login/RequireAuth/RequireAuth";
+import ServiceDetails from "./Pages/Services/ServiceDetails";
 function App() {
     return (
         <div>
@@ -19,11 +21,19 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home></Home>}></Route>
                 <Route path="/home" element={<Home></Home>}></Route>
-                <Route path="/services/:serviceId" element={<ServiceDetails></ServiceDetails>}></Route>
+                <Route path="/service/:serviceId" element={<ServiceDetails></ServiceDetails>}></Route>
                 <Route path="/login" element={<Login></Login>}></Route>
                 <Route path="/about" element={<About></About>}></Route>
                 <Route path="/register" element={<Register></Register>}></Route>
-                <Route path="*" element={<NotFound></NotFound>}></Route>
+                <Route
+                    path="/checkout"
+                    element={
+                        <RequireAuth>
+                            <Checkout></Checkout>
+                        </RequireAuth>
+                    }
+                ></Route>
+                {/* <Route path="*" element={<NotFound></NotFound>}></Route> */}
             </Routes>
             <Footer></Footer>
         </div>
