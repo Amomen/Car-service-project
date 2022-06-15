@@ -1,61 +1,69 @@
-import React, { useRef } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Form } from "react-bootstrap";
+import { useRef } from "react";
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
+import SocialLogin from "./Social/SocialLogin";
+
 const Login = () => {
-    const location = useLocation();
     const emailRef = useRef("");
-    const passRef = useRef("");
+    const passwordRef = useRef("");
     const navigate = useNavigate();
+    const location = useLocation();
+
+    let from = location.state?.from?.pathname || "/";
+    let errorElement;
     const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+
+    if (loading || sending) {
+        <p>Loading....</p>;
+    }
+
+    if (user) {
+        navigate(from, { replace: true });
+    }
+
+    if (error) {
+        errorElement = <p className="text-danger">Error: {error?.message}</p>;
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const email = emailRef.current.value;
-        const pass = passRef.current.value;
-        signInWithEmailAndPassword(emailRef, passRef);
+        const password = passwordRef.current.value;
+
+        signInWithEmailAndPassword(email, password);
     };
 
-    if (loading) {
-        return <p>Loading...</p>;
-    } else {
-        let from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
-        // navigate("/about");
-    }
     const navigateRegister = (event) => {
         navigate("/register");
     };
 
     return (
-        <div className="mt-10 container mx-auto w-50">
-            <h2 className="text-primary mt-4 text-center">Please Login</h2>
+        <div className="container w-50 mx-auto">
+            <h2 className="text-primary text-center mt-2">Please Login</h2>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control ref={emailRef} type="email" placeholder="Enter email" />
-                    <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>
+                    <Form.Control ref={emailRef} type="email" placeholder="Enter email" required />
                 </Form.Group>
-
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control ref={passRef} type="password" placeholder="Password" />
+                    <Form.Control ref={passwordRef} type="password" placeholder="Password" required />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
+                <Button variant="primary w-50 mx-auto d-block mb-2" type="submit">
+                    Login
                 </Button>
             </Form>
+            {errorElement}
             <p>
-                new to genius car?{" "}
-                <span className="text-danger" style={{ cursor: "pointer" }} onClick={navigateRegister}>
-                    please Register
-                </span>
+                New to Genius Car?{" "}
+                <Link to="/register" className="text-primary pe-auto text-decoration-none" onClick={navigateRegister}>
+                    Please Register
+                </Link>{" "}
             </p>
+
+            <SocialLogin></SocialLogin>
         </div>
     );
 };
