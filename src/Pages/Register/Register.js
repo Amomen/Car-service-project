@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import SocialLogin from "../Login/Social/SocialLogin";
 
 const Register = () => {
+    const [agree, setAgree] = useState(false);
     const navigate = useNavigate();
     const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth);
     const handleRegister = (event) => {
@@ -41,9 +42,19 @@ const Register = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
+                    <Form.Check
+                        onClick={() => {
+                            setAgree(!agree);
+                        }}
+                        type="checkbox"
+                        name="terms"
+                        id="terms"
+                    />
+                    <label className={agree ? "text-primary" : "text-danger"} htmlFor="terms">
+                        I Accept Terms and Conditions
+                    </label>
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100">
+                <Button disabled={!agree} variant="primary" type="submit" className="w-100">
                     Register
                 </Button>
                 <p>

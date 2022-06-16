@@ -1,5 +1,5 @@
 import { Button, Form } from "react-bootstrap";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
@@ -13,9 +13,11 @@ const Login = () => {
 
     let from = location.state?.from?.pathname || "/";
     let errorElement;
-    const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+    const [email, setEmail] = useState("");
+    const [sendPasswordResetEmail, sending, error] = useSendPasswordResetEmail();
+    const [signInWithEmailAndPassword, user, loading, error1] = useSignInWithEmailAndPassword(auth);
 
-    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+    // const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
 
     if (loading || sending) {
         <p>Loading....</p>;
@@ -25,8 +27,8 @@ const Login = () => {
         navigate(from, { replace: true });
     }
 
-    if (error) {
-        errorElement = <p className="text-danger">Error: {error?.message}</p>;
+    if (error1) {
+        errorElement = <p className="text-danger">Error: {error1?.message}</p>;
     }
 
     const handleSubmit = (event) => {
@@ -60,6 +62,19 @@ const Login = () => {
                 New to Genius Car?{" "}
                 <Link to="/register" className="text-primary pe-auto text-decoration-none" onClick={navigateRegister}>
                     Please Register
+                </Link>{" "}
+            </p>
+            <p>
+                Forgot Password ?{" "}
+                <Link
+                    to="/register"
+                    className="text-primary pe-auto text-decoration-none"
+                    onClick={async () => {
+                        await sendPasswordResetEmail(emailRef);
+                        alert("Sent email");
+                    }}
+                >
+                    Send Reset Email
                 </Link>{" "}
             </p>
 
